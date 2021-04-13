@@ -1,7 +1,10 @@
 # My ignore
+convV/
+result_png/
 hw2_dataset/
 .idea/
 test.py
+*.pt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -13,6 +13,7 @@ import os
 def load_data(data_dir="../data/", input_size=224, batch_size=36):
     data_transforms = {
         'train': transforms.Compose([
+            # data augmentation and learning rate strategy (10pt)
             transforms.RandomResizedCrop(input_size),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
