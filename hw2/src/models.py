@@ -8,11 +8,12 @@ def model_A(num_classes):
     model_resnet.fc = nn.Linear(num_features, num_classes)
     return model_resnet
 
+
 def model_B(num_classes):
-    ## your code here
+    # # your code here
     pass
 
 
 def model_C(num_classes):
-    ## your code here
+    # # your code here
     pass

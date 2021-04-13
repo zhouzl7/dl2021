@@ -1,6 +1,7 @@
 # My ignore
 hw2_dataset/
 .idea/
+test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
