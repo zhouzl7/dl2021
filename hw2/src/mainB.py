@@ -62,7 +62,6 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
     # # use Visdom to report training and test curves (10pts)
     vis = Visdom()
     for epoch in range(num_epochs):
-        scheduler.step()
         print('epoch:{:d}/{:d}'.format(epoch, num_epochs))
         print('*' * 100)
         train_loss, train_acc = train(model, train_loader, optimizer, criterion)
@@ -82,6 +81,7 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
             win='acc_modelB',
             opts=dict(title='acc_modelB', legend=['train_acc', 'valid_acc']),
             update='append')
+        scheduler.step()
         if valid_acc > best_acc:
             best_acc = valid_acc
             best_model = model
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     model = model.to(device)
 
     # # data preparation
-    train_loader, valid_loader = data.load_data(data_dir=data_dir, input_size=input_size, batch_size=batch_size)
+    train_loader, valid_loader = data.load_data(data_dir=data_dir, train_data_dir='2-Medium-Scale', input_size=input_size, batch_size=batch_size)
 
     # # optimizer
     # data augmentation and learning rate strategy (10pt)

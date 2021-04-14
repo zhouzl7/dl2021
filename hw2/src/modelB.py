@@ -101,7 +101,7 @@ class DilateNet(nn.Module):
 
         out_t = out.view(out.size(0), -1)
         out = self.linear(out_t)
-        return out, out_t
+        return out
 
 
 def dilateNet18(num_classes):

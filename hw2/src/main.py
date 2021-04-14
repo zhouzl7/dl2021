@@ -99,7 +99,7 @@ if __name__ == '__main__':
     model = model.to(device)
 
     # # data preparation
-    train_loader, valid_loader = data.load_data(data_dir=data_dir, input_size=input_size, batch_size=batch_size)
+    train_loader, valid_loader = data.load_data(data_dir=data_dir, train_data_dir='1-Large-Scale', input_size=input_size, batch_size=batch_size)
 
     # # optimizer
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
