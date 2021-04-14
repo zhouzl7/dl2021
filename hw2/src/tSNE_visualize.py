@@ -45,7 +45,6 @@ def visualize_model(model, valid_loader):
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         plt.savefig(save_path + 'tSNE.png')
-        break
 
 
 if __name__ == '__main__':

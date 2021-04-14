@@ -15,7 +15,7 @@ from PIL import Image
 
 if __name__ == '__main__':
     model = torch.load('best_model_A.pt')
-    # model.cuda()
+    model.cuda()
     model.eval()
 
     t = transforms.Compose([
@@ -49,7 +49,7 @@ if __name__ == '__main__':
             m.register_forward_pre_hook(viz)
 
     img = Image.open('../hw2_dataset/test/AnnualCrop/AnnualCrop_11.jpg')
-    img = t(img).unsqueeze(0)
+    img = t(img).unsqueeze(0).cuda()
     with torch.no_grad():
         model(img)
 
