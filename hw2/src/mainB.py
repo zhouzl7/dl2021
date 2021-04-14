@@ -111,7 +111,8 @@ if __name__ == '__main__':
     model = model.to(device)
 
     # # data preparation
-    train_loader, valid_loader = data.load_data(data_dir=data_dir, train_data_dir='2-Medium-Scale', input_size=input_size, batch_size=batch_size)
+    train_loader, valid_loader = data.load_data(data_dir=data_dir, train_data_dir='2-Medium-Scale',
+                                                input_size=input_size, batch_size=batch_size)
 
     # # optimizer
     # data augmentation and learning rate strategy (10pt)

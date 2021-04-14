@@ -12,9 +12,10 @@ import numpy as np
 import os
 from torchvision import transforms
 from PIL import Image
+plt.rcParams.update({'figure.max_open_warning': 0})
 
 if __name__ == '__main__':
-    model = torch.load('best_model_A.pt')
+    model = torch.load('../best_model/best_model_A.pt')
     model.cuda()
     model.eval()
 
@@ -31,6 +32,7 @@ if __name__ == '__main__':
         x = input[0][0].detach().cpu().numpy()
         # Display up to 4 pictures
         min_num = np.minimum(4, x.shape[0])
+        plt.figure()
         for i in range(min_num):
             plt.subplot(1, 4, i + 1)
             plt.imshow(x[i])

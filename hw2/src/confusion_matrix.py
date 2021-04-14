@@ -38,8 +38,9 @@ if __name__ == '__main__':
     batch_size = 36
 
     # # model initialization
-    model = torch.load('best_model_A.pt')
+    model = torch.load('../best_model/best_model_C.pt')
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("device:", device)
     model = model.to(device)
 
     # # data preparation

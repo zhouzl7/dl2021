@@ -36,15 +36,15 @@ def visualize_model(model, valid_loader):
 
     for inputs, labels in valid_loader:
         inputs = inputs.to(device)
-        out_t = model(inputs)
+        out = model(inputs)
         tsne = TSNE(n_components=2)
-        y = tsne.fit_transform(out_t.detach().cpu().numpy())
-        fig = plot_embedding(y, labels.numpy(),
-                             't-SNE embedding')
-        save_path = os.getcwd() + '/result_png/'
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        plt.savefig(save_path + 'tSNE.png')
+        y = tsne.fit_transform(out.detach().cpu().numpy())
+        fig = plot_embedding(y, labels.numpy(), 't-SNE embedding')
+        break
+    save_path = os.getcwd() + '/result_png/'
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    plt.savefig(save_path + 'tSNE.png')
 
 
 if __name__ == '__main__':
@@ -56,15 +56,16 @@ if __name__ == '__main__':
     # # about data
     data_dir = "../hw2_dataset/"  # # You need to specify the data_dir first
     input_size = 224
-    batch_size = 36
+    batch_size = 200
 
     # # model initialization
-    model = torch.load('best_model_A.pt')
+    model = torch.load('../best_model/best_model_A.pt')
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("device:", device)
     model = model.to(device)
 
     # # data preparation
-    _, valid_loader = data.load_data(data_dir=data_dir, input_size=input_size, batch_size=batch_size)
+    _, valid_loader = data.load_data(data_dir=data_dir, test_data_dir="tSNE", input_size=input_size, batch_size=batch_size)
     # # loss function
     criterion = nn.CrossEntropyLoss()
     visualize_model(model, valid_loader)

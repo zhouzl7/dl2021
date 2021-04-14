@@ -10,7 +10,7 @@ import os
 # # mean_vals = [0.485, 0.456, 0.406]
 # # std_vals = [0.229, 0.224, 0.225]
 
-def load_data(data_dir, train_data_dir, input_size=224, batch_size=36):
+def load_data(data_dir="../data/", train_data_dir="2-Medium-Scale", test_data_dir="test", input_size=224, batch_size=36):
     data_transforms = {
         'train': transforms.Compose([
             # data augmentation and learning rate strategy (10pt)
@@ -30,7 +30,7 @@ def load_data(data_dir, train_data_dir, input_size=224, batch_size=36):
     # # For other tasks, you may need to modify the data dir or even rewrite some part of 'data.py'
     image_dataset_train = datasets.ImageFolder(os.path.join(data_dir, train_data_dir, 'train'),
                                                data_transforms['train'])
-    image_dataset_valid = datasets.ImageFolder(os.path.join(data_dir, 'test'), data_transforms['test'])
+    image_dataset_valid = datasets.ImageFolder(os.path.join(data_dir, test_data_dir), data_transforms['test'])
 
     train_loader = DataLoader(image_dataset_train, batch_size=batch_size, shuffle=True, num_workers=4)
     valid_loader = DataLoader(image_dataset_valid, batch_size=batch_size, shuffle=False, num_workers=4)
