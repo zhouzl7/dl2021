@@ -85,7 +85,7 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         if valid_acc > best_acc:
             best_acc = valid_acc
             best_model = model
-            torch.save(best_model, 'best_model_B.pt')
+            torch.save(best_model, 'best_model_B_34.pt')
 
 
 if __name__ == '__main__':
