@@ -106,3 +106,7 @@ class DilateNet(nn.Module):
 
 def dilateNet18(num_classes):
     return DilateNet(BasicBlock, DilateBlock, [2, 2, 2, 2], num_classes)
+
+
+def dilateNet34(num_classes):
+    return DilateNet(BasicBlock, DilateBlock, [3, 4, 6, 3], num_classes)

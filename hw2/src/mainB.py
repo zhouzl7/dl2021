@@ -100,8 +100,8 @@ if __name__ == '__main__':
     batch_size = 36
 
     # # about training
-    num_epochs = 300
-    steps = [50, 100, 150, 200, 250]
+    num_epochs = 150
+    steps = [30, 60, 90, 120]
     lr = 0.001
 
     # # model initialization

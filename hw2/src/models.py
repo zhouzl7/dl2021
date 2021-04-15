@@ -1,6 +1,6 @@
 from torchvision import models
 import torch.nn as nn
-from modelB import dilateNet18
+from modelB import dilateNet34
 
 
 def model_A(num_classes):
@@ -12,7 +12,7 @@ def model_A(num_classes):
 
 def model_B(num_classes):
     # # your code here
-    model = dilateNet18(num_classes)
+    model = dilateNet34(num_classes)
 
     # extra techniques(20pt): Kaiming Normal for weight initialization
     def initialize_weights(m):
