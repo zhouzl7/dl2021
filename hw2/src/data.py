@@ -14,8 +14,8 @@ def load_data(data_dir="../data/", train_data_dir="2-Medium-Scale", test_data_di
     data_transforms = {
         'train': transforms.Compose([
             # data augmentation and learning rate strategy (10pt)
-            transforms.RandomResizedCrop(input_size),
-            transforms.RandomVerticalFlip(),
+            transforms.CenterCrop(input_size),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
