@@ -15,8 +15,11 @@ from PIL import Image
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 if __name__ == '__main__':
-    model = torch.load('../best_model/best_model_A.pt')
-    model.cuda()
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = torch.load('../best_model/best_model_A.pt', map_location=device)
+    if torch.cuda.is_available():
+        model.cuda()
     model.eval()
 
     t = transforms.Compose([
@@ -51,7 +54,7 @@ if __name__ == '__main__':
             m.register_forward_pre_hook(viz)
 
     img = Image.open('../hw2_dataset/test/AnnualCrop/AnnualCrop_11.jpg')
-    img = t(img).unsqueeze(0).cuda()
+    img = t(img).unsqueeze(0).cuda() if torch.cuda.is_available() else t(img).unsqueeze(0)
     with torch.no_grad():
         model(img)
 
