@@ -39,12 +39,12 @@ def visualize_model(model, valid_loader):
         out = model(inputs)
         tsne = TSNE(n_components=2)
         y = tsne.fit_transform(out.detach().cpu().numpy())
-        fig = plot_embedding(y, labels.numpy(), 't-SNE embedding')
+        fig = plot_embedding(y, labels.numpy(), 't-SNE Visualization: modelA')
         break
     save_path = os.getcwd() + '/result_png/'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    plt.savefig(save_path + 'tSNE.png')
+    plt.savefig(save_path + 'tSNE_modelA.png')
 
 
 if __name__ == '__main__':
@@ -56,11 +56,11 @@ if __name__ == '__main__':
     # # about data
     data_dir = "../hw2_dataset/"  # # You need to specify the data_dir first
     input_size = 224
-    batch_size = 200
+    batch_size = 500
 
     # # model initialization
     model = torch.load('../best_model/best_model_A.pt')
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = "cpu"  # torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("device:", device)
     model = model.to(device)
 
