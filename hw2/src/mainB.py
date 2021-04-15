@@ -59,6 +59,7 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         return epoch_loss, epoch_acc.item()
 
     best_acc = 0.0
+    best_acc_t = 0.0
     # # use Visdom to report training and test curves (10pts)
     vis = Visdom()
     for epoch in range(num_epochs):
@@ -72,24 +73,27 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         vis.line(
             X=[epoch],
             Y=[[train_loss, valid_loss]],
-            win='loss_modelB_34',
-            opts=dict(title='loss_modelB_34', legend=['train_loss', 'valid_loss']),
+            win='loss_modelB_18_1111',
+            opts=dict(title='loss_modelB_18_1111', legend=['train_loss', 'valid_loss']),
             update='append')
         vis.line(
             X=[epoch],
             Y=[[train_acc, valid_acc]],
-            win='acc_modelB_34',
-            opts=dict(title='acc_modelB_34', legend=['train_acc', 'valid_acc']),
+            win='acc_modelB_18_1111',
+            opts=dict(title='acc_modelB_18_1111', legend=['train_acc', 'valid_acc']),
             update='append')
         scheduler.step()
+        if train_acc > best_acc_t:
+            best_acc_t = train_acc
         if valid_acc > best_acc:
             best_acc = valid_acc
             best_model = model
-            torch.save(best_model, 'best_model_B_34.pt')
+            torch.save(best_model, 'best_model_B_18_1111.pt')
+    print("best train_acc: {}, best valid_acc: {}".format(best_acc_t, best_acc))
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
 
     # # about model
     num_classes = 10
@@ -100,13 +104,13 @@ if __name__ == '__main__':
     batch_size = 36
 
     # # about training
-    num_epochs = 150
-    steps = [30, 60, 90, 120]
+    num_epochs = 200
+    steps = [40, 80, 120, 160]
     lr = 0.001
 
     # # model initialization
     model = models.model_B(num_classes=num_classes)
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:4" if torch.cuda.is_available() else "cpu")
     print("device:", device)
     model = model.to(device)
 

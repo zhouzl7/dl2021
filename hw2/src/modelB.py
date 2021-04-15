@@ -75,8 +75,8 @@ class DilateNet(nn.Module):
 
         self.bn1 = nn.BatchNorm2d(64)
         self.pool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
-        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer1 = self._make_layer(block2, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block2, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block2, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block2, 512, num_blocks[3], stride=2)
         self.linear = nn.Linear(512, num_classes)
