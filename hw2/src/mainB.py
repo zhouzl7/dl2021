@@ -72,14 +72,14 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         vis.line(
             X=[epoch],
             Y=[[train_loss, valid_loss]],
-            win='loss_modelB',
-            opts=dict(title='loss_modelB', legend=['train_loss', 'valid_loss']),
+            win='loss_modelB_34',
+            opts=dict(title='loss_modelB_34', legend=['train_loss', 'valid_loss']),
             update='append')
         vis.line(
             X=[epoch],
             Y=[[train_acc, valid_acc]],
-            win='acc_modelB',
-            opts=dict(title='acc_modelB', legend=['train_acc', 'valid_acc']),
+            win='acc_modelB_34',
+            opts=dict(title='acc_modelB_34', legend=['train_acc', 'valid_acc']),
             update='append')
         scheduler.step()
         if valid_acc > best_acc:
