@@ -78,7 +78,7 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, num_epo
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
 
     # # about model
     num_classes = 10
@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     # # model initialization
     model = models.model_A(num_classes=num_classes)
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
     print("device:", device)
     model = model.to(device)
 

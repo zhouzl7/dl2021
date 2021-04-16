@@ -73,22 +73,22 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         vis.line(
             X=[epoch],
             Y=[[train_loss, valid_loss]],
-            win='loss_modelC_NoKM',
-            opts=dict(title='loss_modelC_NoKM', legend=['train_loss', 'valid_loss']),
+            win='loss_modelC_0000',
+            opts=dict(title='loss_modelC_0000', legend=['train_loss', 'valid_loss']),
             update='append')
         vis.line(
             X=[epoch],
             Y=[[train_acc, valid_acc]],
-            win='acc_modelC_NoKM',
-            opts=dict(title='acc_modelC_NoKM', legend=['train_acc', 'valid_acc']),
+            win='acc_modelC_0000',
+            opts=dict(title='acc_modelC_0000', legend=['train_acc', 'valid_acc']),
             update='append')
-        # scheduler.step()
+        scheduler.step()
         if train_acc > best_acc_t:
             best_acc_t = train_acc
         if valid_acc > best_acc:
             best_acc = valid_acc
             best_model = model
-            torch.save(best_model, 'best_model_C_NoKM.pt')
+            torch.save(best_model, 'best_model_C_0000.pt')
     print("best train_acc: {}, best valid_acc: {}".format(best_acc_t, best_acc))
 
 

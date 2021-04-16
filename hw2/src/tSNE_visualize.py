@@ -31,7 +31,7 @@ def plot_embedding(data, label, title):
     return fig
 
 
-def visualize_model(model, valid_loader):
+def tsne_viz(model, valid_loader):
     model.train(False)
 
     for inputs, labels in valid_loader:
@@ -48,7 +48,7 @@ def visualize_model(model, valid_loader):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
 
     # # about model
     num_classes = 10
@@ -68,4 +68,4 @@ if __name__ == '__main__':
     _, valid_loader = data.load_data(data_dir=data_dir, test_data_dir="tSNE", input_size=input_size, batch_size=batch_size)
     # # loss function
     criterion = nn.CrossEntropyLoss()
-    visualize_model(model, valid_loader)
+    tsne_viz(model, valid_loader)

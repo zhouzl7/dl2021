@@ -73,22 +73,22 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, schedul
         vis.line(
             X=[epoch],
             Y=[[train_loss, valid_loss]],
-            win='loss_modelB_NoLRS',
-            opts=dict(title='loss_modelB_NoLRS', legend=['train_loss', 'valid_loss']),
+            win='loss_modelB_test',
+            opts=dict(title='loss_modelB_test', legend=['train_loss', 'valid_loss']),
             update='append')
         vis.line(
             X=[epoch],
             Y=[[train_acc, valid_acc]],
-            win='acc_modelB_NoLRS',
-            opts=dict(title='acc_modelB_NoLRS', legend=['train_acc', 'valid_acc']),
+            win='acc_modelB_test',
+            opts=dict(title='acc_modelB_test', legend=['train_acc', 'valid_acc']),
             update='append')
-        # scheduler.step()
+        scheduler.step()
         if train_acc > best_acc_t:
             best_acc_t = train_acc
         if valid_acc > best_acc:
             best_acc = valid_acc
             best_model = model
-            torch.save(best_model, 'best_model_B_NoLRS.pt')
+            torch.save(best_model, 'best_model_B_test.pt')
     print("best train_acc: {}, best valid_acc: {}".format(best_acc_t, best_acc))
 
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     # # model initialization
     model = models.model_B(num_classes=num_classes)
-    device = torch.device("cuda:4" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("device:", device)
     model = model.to(device)
 
