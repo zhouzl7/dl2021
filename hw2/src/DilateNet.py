@@ -3,7 +3,7 @@
 @author: zhou zelong
 @contact: zzl850783164@163.com
 @time: 2021/4/13 14:43
-@file: modelB.py
+@file: DilateNet.py
 @desc: 
 """
 
