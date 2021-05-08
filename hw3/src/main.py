@@ -40,13 +40,14 @@ parser.add_argument('--dropout', type=float, default=0.5,
 parser.add_argument('--seed', type=int, default=1234,
                     help='set random seed')
 parser.add_argument('--cuda', action='store_true', help='use CUDA device')
-parser.add_argument('--gpu_id', type=int, help='GPU device id used')
+parser.add_argument('--gpu_id', type=int, default=0, help='GPU device id used')
 
 args = parser.parse_args()
 
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
 
+os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,2,3,4,5,6,7"
 if torch.cuda.is_available():
     if not args.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -181,7 +182,6 @@ def evaluate(eval_model, data_source):
 
 
 if __name__ == "__main__":
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1,2,3,4,5,6,7"
     # Train Function
     best_val_loss = float("inf")
     best_model = None
