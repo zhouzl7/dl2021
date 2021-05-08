@@ -2,6 +2,7 @@ import math
 import torch
 import torch.nn as nn
 
+
 class TransformerModel(nn.Module):
 
     def __init__(self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5):
@@ -18,8 +19,6 @@ class TransformerModel(nn.Module):
         ######Your code here########
         ########################################
         pass
-
-
 
     def init_weights(self):
         initrange = 0.1

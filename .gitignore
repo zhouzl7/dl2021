@@ -4,6 +4,7 @@ result_png/
 hw2_dataset/
 best_model/
 .idea/
+.data/
 test.py
 *.pt
 
