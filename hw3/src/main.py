@@ -84,7 +84,6 @@ else:
     savefile.close()
     print("corpus saved to pickle")
 
-
 # WRITE CODE HERE within two '#' bar
 ########################################
 # bulid your language model here
@@ -100,6 +99,8 @@ elif args.model == 'Transformer':
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=4e-5)
 scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=steps, gamma=0.1)
 criterion = nn.CrossEntropyLoss()
+
+
 # criterion = nn.CrossEntropyLoss()
 # lr = 5.0  # learning rate
 # optimizer = torch.optim.SGD(model.parameters(), lr=lr)
@@ -207,12 +208,15 @@ if __name__ == "__main__":
         epoch_start_time = time.time()
         train_loss = train()
         val_loss = evaluate(model, data_loader.val_data)
+        if args.model == 'Transformer':
+            viz_title = args.model + '_loss' + args.nlayers
+        else:
+            viz_title = args.rnn_type + '_loss' + args.nlayers
         viz.line(
             X=[epoch],
             Y=[[train_loss, val_loss]],
-            win=args.model+'_loss' if args.model == 'Transformer' else args.rnn_type + '_loss',
-            opts=dict(title=args.model+'_loss' if args.model == 'Transformer' else args.rnn_type + '_loss',
-                      legend=['train_loss', 'valid_loss']),
+            win=viz_title,
+            opts=dict(title=viz_title, legend=['train_loss', 'valid_loss']),
             update='append')
         print('-' * 89)
         print('| end of epoch {:3d} | time: {:5.2f}s | train loss {:5.2f} | '
@@ -226,7 +230,7 @@ if __name__ == "__main__":
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             best_model = model
-            torch.save(best_model, args.model+'_best_model.pt')
+            torch.save(best_model, args.model + '_best_model_' + args.nlayers + '.pt')
 
         scheduler.step()
 
