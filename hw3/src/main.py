@@ -147,12 +147,12 @@ def train():
             cur_loss = total_loss / log_interval
             ret_loss += cur_loss
             elapsed = time.time() - start_time
-            print('| epoch {:3d} | {:5d}/{:5d} batches | forward ms/batch {:5.2f} | '
-                  'lr {:02.2f} | ms/batch {:5.2f} | '
-                  'loss {:5.2f} | ppl {:8.2f}'.format(
-                epoch, batch, len(data_loader.train_data) // args.bptt, scheduler.get_last_lr()[0],
-                              elapsed * 1000 / log_interval, forward_elapsed_time * 1000 / log_interval,
-                cur_loss, math.exp(cur_loss)))
+            print('| epoch {:3d} | {:5d}/{:5d} batches | '
+                  'lr {:02.5f} | ms/batch {:5.2f} | forward ms/batch {:5.2f} | '
+                  'loss {:5.2f} | ppl {:8.2f}'.format(epoch, batch, len(data_loader.train_data) // args.bptt,
+                                                      scheduler.get_last_lr()[0], elapsed * 1000 / log_interval,
+                                                      forward_elapsed_time * 1000 / log_interval, cur_loss,
+                                                      math.exp(cur_loss)))
             total_loss = 0.
             start_time = time.time()
             forward_elapsed_time = 0.
