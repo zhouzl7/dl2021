@@ -2,7 +2,6 @@
 import argparse
 import math
 import os
-import pickle
 
 import torch
 import torch.nn as nn
@@ -66,23 +65,9 @@ print('using Visdom for visualize')
 viz = Visdom()
 
 # load data
-corpus_name = os.path.basename(os.path.normpath(args.data))
-corpus_filename = './.data/corpus-' + str(corpus_name) + str('.pkl')
-if os.path.isfile(corpus_filename):
-    print("loading pre-built " + str(corpus_name) + " corpus file...")
-    loadfile = open(corpus_filename, 'rb')
-    data_loader = pickle.load(loadfile)
-    loadfile.close()
-else:
-    print("building " + str(corpus_name) + " corpus...")
-    data_loader = Corpus(path=args.data, train_batch_size=args.train_batch_size,
-                         eval_batch_size=args.eval_batch_size,
-                         bptt=args.bptt, device=device)
-    # save the corpus for later
-    savefile = open(corpus_filename, 'wb')
-    pickle.dump(data_loader, savefile)
-    savefile.close()
-    print("corpus saved to pickle")
+data_loader = Corpus(path=args.data, train_batch_size=args.train_batch_size,
+                     eval_batch_size=args.eval_batch_size,
+                     bptt=args.bptt, device=device)
 
 # WRITE CODE HERE within two '#' bar
 ########################################
@@ -209,9 +194,9 @@ if __name__ == "__main__":
         train_loss = train()
         val_loss = evaluate(model, data_loader.val_data)
         if args.model == 'Transformer':
-            viz_title = args.model + '_loss' + args.nlayers
+            viz_title = args.model + str(args.nlayers) + '_loss'
         else:
-            viz_title = args.rnn_type + '_loss' + args.nlayers
+            viz_title = args.rnn_type + str(args.nlayers) + '_loss'
         viz.line(
             X=[epoch],
             Y=[[train_loss, val_loss]],
@@ -230,7 +215,7 @@ if __name__ == "__main__":
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             best_model = model
-            torch.save(best_model, args.model + '_best_model_' + args.nlayers + '.pt')
+            torch.save(best_model, args.model + str(args.nlayers) + '_best_model.pt')
 
         scheduler.step()
 
