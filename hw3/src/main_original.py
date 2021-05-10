@@ -162,17 +162,16 @@ def train():
 def evaluate(eval_model, data_source):
     eval_model.eval()  # Turn on the evaluation mode
     total_loss = 0.
-    src_mask = eval_model.generate_square_subsequent_mask(args.bptt).to(device)
+    hidden = eval_model.init_hidden(args.eval_batch_size)
     with torch.no_grad():
         for i in range(0, data_source.size(0) - 1, args.bptt):
             data, targets = data_loader.get_batch(data_source, i)
 
             ########################################
-            if data.size(0) != args.bptt:
-                src_mask = model.generate_square_subsequent_mask(data.size(0)).to(device)
-            output = eval_model(data, src_mask)
-            output_flat = output.view(-1, nvoc)
-            total_loss += len(data) * criterion(output_flat, targets).item()
+            output, hidden = eval_model(data, hidden)
+            loss = criterion(output.view(-1, nvoc), targets)
+            total_loss += len(data) * loss.item()
+            hidden = repackage_hidden(hidden)
             ########################################
     loss_mean = total_loss / len(data_source)
     print('[eval] loss: {}, LR: {}'.format(loss_mean, optimizer.state_dict()['param_groups'][0]['lr']))
