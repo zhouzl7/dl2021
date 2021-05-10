@@ -9,7 +9,6 @@ import time
 from visdom import Visdom
 
 from data import Corpus
-from Transformer import TransformerModel
 from RNN import RNNModel
 
 parser = argparse.ArgumentParser(description='PyTorch Language Model')

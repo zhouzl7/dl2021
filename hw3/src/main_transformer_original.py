@@ -10,7 +10,6 @@ from visdom import Visdom
 
 from data import Corpus
 from Transformer import TransformerModel
-from RNN import RNNModel
 
 parser = argparse.ArgumentParser(description='PyTorch Language Model')
 parser.add_argument('--data', type=str, default='./.data/wikitext-2',
@@ -29,7 +28,7 @@ parser.add_argument('--nhead', type=int, default=2,
                     help='number of layers')
 parser.add_argument('--lr', type=float, default=0.001,
                     help='initial learning rate')
-parser.add_argument('--clip', type=float, default=0.5,
+parser.add_argument('--clip', type=float, default=0.1,
                     help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=100,
                     help='upper epoch limit')
@@ -37,9 +36,9 @@ parser.add_argument('--train_batch_size', type=int, default=20, metavar='N',
                     help='batch size')
 parser.add_argument('--eval_batch_size', type=int, default=10, metavar='N',
                     help='eval batch size')
-parser.add_argument('--bptt', type=int, default=35, metavar='N',
+parser.add_argument('--bptt', type=int, default=100, metavar='N',
                     help='sequence length')
-parser.add_argument('--dropout', type=float, default=0.2,
+parser.add_argument('--dropout', type=float, default=0.5,
                     help='dropout applied to layers (0 = no dropout)')
 parser.add_argument('--seed', type=int, default=1234,
                     help='set random seed')
