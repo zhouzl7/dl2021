@@ -83,13 +83,9 @@ print("model built, total trainable params: " + str(total_params))
 ########################################
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=5)
-
-# criterion = nn.CrossEntropyLoss()
-# lr = 5.0  # learning rate
-# optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
+lr = 5.0  # learning rate
+optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
 
 
 def repackage_hidden(h):
@@ -120,7 +116,7 @@ def train():
 
         forward_start_time = time.time()
 
-        # optimizer.zero_grad()
+        optimizer.zero_grad()
 
         ########################################
         hidden = repackage_hidden(hidden)
@@ -137,8 +133,6 @@ def train():
         forward_elapsed_time += forward_elapsed
 
         loss.backward()
-        # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
-        torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
 
         optimizer.step()
         ########################################
@@ -196,11 +190,11 @@ if __name__ == "__main__":
         train_loss = train()
         val_loss = evaluate(model, data_loader.val_data)
         if args.model == 'Transformer':
-            viz_title = args.model + str(args.nlayers) + '_loss'
-            model_name = args.model + str(args.nlayers) + '_best_model.pt'
+            viz_title = args.model + str(args.nlayers) + '_original_loss'
+            model_name = args.model + str(args.nlayers) + '_original_best_model.pt'
         else:
-            viz_title = args.rnn_type + str(args.nlayers) + '_loss'
-            model_name = args.rnn_type + str(args.nlayers) + '_best_model.pt'
+            viz_title = args.rnn_type + str(args.nlayers) + '_original_loss'
+            model_name = args.rnn_type + str(args.nlayers) + '_original_best_model.pt'
         viz.line(
             X=[epoch],
             Y=[[train_loss, val_loss]],
@@ -221,7 +215,7 @@ if __name__ == "__main__":
             best_model = model
             torch.save(best_model, model_name)
 
-        scheduler.step(val_loss)
+        scheduler.step()
 
     ########################################
 
