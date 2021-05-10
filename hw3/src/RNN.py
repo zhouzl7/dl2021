@@ -16,7 +16,7 @@ class RNNModel(nn.Module):
         if rnn_type in ['LSTM', 'GRU']:
             self.rnn = getattr(nn, rnn_type)(ninput, nhid, nlayers, dropout=0.5)
         else:
-            raise ValueError("""An invalid option for `--model` was supplied, options are ['LSTM', 'GRU']""")
+            raise ValueError("""An invalid option for `--rnn_type` was supplied, options are ['LSTM', 'GRU']""")
         ########################################
 
         self.decoder = nn.Linear(nhid, nvoc)

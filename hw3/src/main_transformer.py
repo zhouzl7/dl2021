@@ -15,19 +15,21 @@ from RNN import RNNModel
 parser = argparse.ArgumentParser(description='PyTorch Language Model')
 parser.add_argument('--data', type=str, default='./.data/wikitext-2',
                     help='location of the data corpus')
-parser.add_argument('--model', type=str, default='RNN',
-                    help='type of recurrent net (RNN)')
+parser.add_argument('--model', type=str, default='Transformer',
+                    help='type of recurrent net (Transformer)')
 parser.add_argument('--rnn_type', type=str, default='LSTM',
                     help='type of recurrent net (LSTM, GRU)')
 parser.add_argument('--ninput', type=int, default=300,
                     help='size of word embeddings')
 parser.add_argument('--nhid', type=int, default=300,
                     help='number of hidden units per layer')
-parser.add_argument('--nlayers', type=int, default=1,
+parser.add_argument('--nlayers', type=int, default=2,
+                    help='number of layers')
+parser.add_argument('--nhead', type=int, default=2,
                     help='number of layers')
 parser.add_argument('--lr', type=float, default=0.001,
                     help='initial learning rate')
-parser.add_argument('--clip', type=float, default=0.1,
+parser.add_argument('--clip', type=float, default=0.5,
                     help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=100,
                     help='upper epoch limit')
@@ -35,9 +37,9 @@ parser.add_argument('--train_batch_size', type=int, default=20, metavar='N',
                     help='batch size')
 parser.add_argument('--eval_batch_size', type=int, default=10, metavar='N',
                     help='eval batch size')
-parser.add_argument('--bptt', type=int, default=100, metavar='N',
+parser.add_argument('--bptt', type=int, default=35, metavar='N',
                     help='sequence length')
-parser.add_argument('--dropout', type=float, default=0.5,
+parser.add_argument('--dropout', type=float, default=0.2,
                     help='dropout applied to layers (0 = no dropout)')
 parser.add_argument('--seed', type=int, default=1234,
                     help='set random seed')
@@ -73,10 +75,10 @@ data_loader = Corpus(path=args.data, train_batch_size=args.train_batch_size,
 ########################################
 # bulid your language model here
 nvoc = data_loader.get_ntokens()
-if args.model == 'RNN':
-    model = RNNModel(args.rnn_type, nvoc, args.ninput, args.nhid, args.nlayers).to(device)
+if args.model == 'Transformer':
+    model = TransformerModel(nvoc, args.ninput, args.nhead, args.nhid, args.nlayers, args.dropout).to(device)
 else:
-    raise ValueError("""An invalid option for `--model` was supplied, options are ['RNN']""")
+    raise ValueError("""An invalid option for `--model` was supplied, options are ['Transformer']""")
 total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print("model built, total trainable params: " + str(total_params))
 ########################################
@@ -108,23 +110,21 @@ def train():
     start_time = time.time()
     forward_elapsed_time = 0.
     log_interval = 200
-    hidden = model.init_hidden(args.train_batch_size)
+    src_mask = model.generate_square_subsequent_mask(args.bptt).to(device)
 
     for batch, i in enumerate(range(0, data_loader.train_data.size(0) - 1, args.bptt)):
         data, targets = data_loader.get_batch(data_loader.train_data, i)
-
+        optimizer.zero_grad()
+        if data.size(0) != args.bptt:
+            src_mask = model.generate_square_subsequent_mask(data.size(0)).to(device)
         # synchronize cuda for a proper speed benchmark
         if torch.cuda.is_available():
             torch.cuda.synchronize()
 
         forward_start_time = time.time()
 
-        # optimizer.zero_grad()
-
         ########################################
-        hidden = repackage_hidden(hidden)
-        model.zero_grad()
-        output, hidden = model(data, hidden)
+        output = model(data, src_mask)
         loss = criterion(output.view(-1, nvoc), targets)
         total_loss += loss.item()
 
@@ -169,16 +169,17 @@ def train():
 def evaluate(eval_model, data_source):
     eval_model.eval()  # Turn on the evaluation mode
     total_loss = 0.
-    hidden = eval_model.init_hidden(args.eval_batch_size)
+    src_mask = eval_model.generate_square_subsequent_mask(args.bptt).to(device)
     with torch.no_grad():
         for i in range(0, data_source.size(0) - 1, args.bptt):
             data, targets = data_loader.get_batch(data_source, i)
 
             ########################################
-            output, hidden = eval_model(data, hidden)
-            loss = criterion(output.view(-1, nvoc), targets)
-            total_loss += len(data) * loss.item()
-            hidden = repackage_hidden(hidden)
+            if data.size(0) != args.bptt:
+                src_mask = eval_model.generate_square_subsequent_mask(data.size(0)).to(device)
+            output = eval_model(data, src_mask)
+            output_flat = output.view(-1, nvoc)
+            total_loss += len(data) * criterion(output_flat, targets).item()
             ########################################
     loss_mean = total_loss / len(data_source)
     print('[eval] loss: {}, LR: {}'.format(loss_mean, optimizer.state_dict()['param_groups'][0]['lr']))
@@ -195,8 +196,8 @@ if __name__ == "__main__":
         train_loss = train()
         val_loss = evaluate(model, data_loader.val_data)
         if args.model == 'Transformer':
-            viz_title = args.model + str(args.nlayers) + '_loss'
-            model_name = args.model + str(args.nlayers) + '_best_model.pt'
+            viz_title = args.model + str(args.nlayers) + str(args.nhead) + '_loss'
+            model_name = args.model + str(args.nlayers) + str(args.nhead) + '_best_model.pt'
         else:
             viz_title = args.rnn_type + str(args.nlayers) + '_loss'
             model_name = args.rnn_type + str(args.nlayers) + '_best_model.pt'
