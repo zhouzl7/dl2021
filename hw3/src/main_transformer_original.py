@@ -84,9 +84,13 @@ print("model built, total trainable params: " + str(total_params))
 ########################################
 
 criterion = nn.CrossEntropyLoss()
-lr = 5.0  # learning rate
-optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
+optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=5)
+
+# criterion = nn.CrossEntropyLoss()
+# lr = 5.0  # learning rate
+# optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
 
 
 def repackage_hidden(h):
@@ -132,8 +136,6 @@ def train():
         forward_elapsed_time += forward_elapsed
 
         loss.backward()
-        # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
-        torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
 
         optimizer.step()
         ########################################
@@ -217,7 +219,7 @@ if __name__ == "__main__":
             best_model = model
             torch.save(best_model, model_name)
 
-        scheduler.step()
+        scheduler.step(val_loss)
 
     ########################################
 

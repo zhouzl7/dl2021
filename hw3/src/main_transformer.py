@@ -84,13 +84,9 @@ print("model built, total trainable params: " + str(total_params))
 ########################################
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=5)
-
-# criterion = nn.CrossEntropyLoss()
-# lr = 5.0  # learning rate
-# optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
+lr = 5.0  # learning rate
+optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
 
 
 def repackage_hidden(h):
@@ -221,7 +217,7 @@ if __name__ == "__main__":
             best_model = model
             torch.save(best_model, model_name)
 
-        scheduler.step(val_loss)
+        scheduler.step()
 
     ########################################
 
