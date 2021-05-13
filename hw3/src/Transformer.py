@@ -16,6 +16,7 @@ class TransformerModel(nn.Module):
         self.encoder = nn.Embedding(ntoken, ninp)
         self.ninp = ninp
         self.decoder = nn.Linear(ninp, ntoken)
+        self.nlayers = nlayers
         ########################################
 
         self.init_weights()
@@ -33,13 +34,24 @@ class TransformerModel(nn.Module):
         self.decoder.bias.data.zero_()
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
+    def get_attention(self, src):
+        attention_list = []
+        src = self.encoder(src) * math.sqrt(self.ninp)
+        src = self.pos_encoder(src)
+        for i in range(self.nlayers):
+            attn = self.transformer_encoder.layers[i].self_attn(src, src, src, need_weights=True)[1]
+            attention_list.append(attn)
+            src = self.transformer_encoder.layers[i](src)
+        return attention_list
+
     def forward(self, src, src_mask):
         ########################################
+        attention = self.get_attention(src)
         src = self.encoder(src) * math.sqrt(self.ninp)
         src = self.pos_encoder(src)
         output = self.transformer_encoder(src, src_mask)
         output = self.decoder(output)
-        return output
+        return output, attention
         ########################################
 
 

@@ -123,7 +123,7 @@ def train():
         forward_start_time = time.time()
 
         ########################################
-        output = model(data, src_mask)
+        output, _ = model(data, src_mask)
         loss = criterion(output.view(-1, nvoc), targets)
         total_loss += loss.item()
 
@@ -174,7 +174,7 @@ def evaluate(eval_model, data_source):
             ########################################
             if data.size(0) != args.bptt:
                 src_mask = eval_model.generate_square_subsequent_mask(data.size(0)).to(device)
-            output = eval_model(data, src_mask)
+            output, _ = eval_model(data, src_mask)
             output_flat = output.view(-1, nvoc)
             total_loss += len(data) * criterion(output_flat, targets).item()
             ########################################
