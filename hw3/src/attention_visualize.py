@@ -81,9 +81,14 @@ def attention_viz(eval_model, data_source):
                 os.makedirs(save_path)
             plt.savefig(save_path + 'attn.jpg')
             temp = data.permute(1, 0)[0]
+            all_sentences = ""
+            for j in range(100):
+                all_sentences += data_loader.dictionary.idx2word[temp[j]] + " "
+            print(all_sentences)
+            print("="*88)
             sentences = ""
             word = None
-            idx = 80
+            idx = 60
             for j in range(25):
                 j += idx-20
                 if j == idx:
